@@ -63,6 +63,39 @@ const mutation = new GraphQLObjectType({
         // Client.create
       },
     },
+    
+    // ::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    UpdateClient: {
+      type:clientType ,
+      args: {
+        id: { type: GraphQLNonNull(GraphQLID) },
+        name: { type: GraphQLString },
+        email: { type: GraphQLString },
+        phone: {type: GraphQLString },
+      },
+      resolve(parent, args) {
+        return Client.findByIdAndUpdate(
+          args.id,
+          
+          {
+            $set: {
+              name: args.name,
+              email: args.description,
+              phone: args.status,
+            },
+          },
+          { new: true }
+        );
+      },
+    },
+
+    // :::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+
+
+
+
+
     // delete a client
     deleteClient: {
       type: clientType,
@@ -99,22 +132,21 @@ const mutation = new GraphQLObjectType({
           status: args.status,
           clientId: args.clientId,
         });
-        const saveP = project.save(); 
+        const saveP = project.save();
         if (saveP) {
           console.log("succes add to project");
         } else {
           console.log("error add to project");
         }
         return saveP;
-       
       },
       resolve(parent, args) {
         const client = new Client({
           name: args.name,
           email: args.email,
-          phone: args.phone,  
+          phone: args.phone,
         });
-        const save = client.save(); 
+        const save = client.save();
         if (save) {
           console.log("succes");
           console.log(save);
@@ -161,7 +193,7 @@ const RootQuery = new GraphQLObjectType({
       },
     },
   },
-} );
+});
 
 module.exports = new GraphQLSchema({
   query: RootQuery,
